@@ -1,32 +1,45 @@
-import React from "react";
+import { Card } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
+import JoinForm from "./components/joinForm";
+import MessageBody from "./components/body";
+import MessageForm from "./components/messageForm";
+import { connect } from "react-redux";
+import { msgAdded, roomJoined } from "./redux/actionCreator";
 
 const socket = io.connect("localhost:4000");
-
-export default function App(props) {
-	socket.on("message", (msg) => console.log(msg));
-	socket.on("joined", (room) => console.log(room));
+function App({ msgAdded, roomJoined }) {
+	let [message, setMessage] = useState(["hi"]);
+	useEffect(() => {
+		socket.on("message", (msg) => {
+			msgAdded(msg);
+			console.log(msg);
+		});
+		socket.on("joined", (room) => {
+			roomJoined(room);
+			console.log(room);
+		});
+	});
 
 	return (
-		<form>
-			<input type="text" id="room"></input>
-			<button
-				onClick={(e) => {
-					e.preventDefault();
-					socket.emit("join", document.getElementById("room").value);
+		<Card id="card">
+			<Card.Header>
+				<JoinForm socket={socket} />
+			</Card.Header>
+			<Card.Body
+				style={{
+					minHeight: window.innerHeight - 128,
+					maxHeight: window.innerHeight - 128,
+					overflow: "auto",
 				}}
 			>
-				join class
-			</button>
-			<br />
-			<button
-				onClick={(e) => {
-					e.preventDefault();
-					socket.emit("msg", "hi");
-				}}
-			>
-				say Hi..
-			</button>
-		</form>
+				<MessageBody />
+			</Card.Body>
+			<Card.Footer>
+				<MessageForm socket={socket} />
+			</Card.Footer>
+		</Card>
 	);
 }
+
+export default connect(null, { msgAdded, roomJoined })(App);

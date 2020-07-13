@@ -1,0 +1,15 @@
+@media only screen and (min-width: 600px) {
+	#root {
+		background-color: rgb(218, 236, 250);
+		min-height: 100vh;
+	}
+	#card {
+		box-shadow: 10px 10px 5px rgb(192, 190, 190);
+		min-width: 480px;
+		margin: auto;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+	}
+}
