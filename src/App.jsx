@@ -5,6 +5,7 @@ const socket = io.connect("localhost:4000");
 
 export default function App(props) {
 	socket.on("message", (msg) => console.log(msg));
+	socket.on("joined", (room) => console.log(room));
 
 	return (
 		<form>
